@@ -18,7 +18,6 @@ export async function onRequest(context) {
     );
   }
 
-  // 🏷 filtro categoría
   if (category) {
     filtered = filtered.filter(s =>
       s.categories?.includes(category)
