@@ -1,1 +1,9 @@
-
+{
+  "name": "schemify-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API for Schemify mod",
+  "scripts": {
+    "dev": "wrangler pages dev ."
+  }
+}
