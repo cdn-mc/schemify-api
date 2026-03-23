@@ -1,1 +1,5 @@
-
+[
+  { "id": "farms", "label": "Farms" },
+  { "id": "builds", "label": "Builds" },
+  { "id": "redstone", "label": "Redstone" }
+]
