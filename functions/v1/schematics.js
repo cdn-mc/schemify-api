@@ -1,5 +1,5 @@
 export async function onRequest(context) {
-  const data = await fetch(new URL('../../data/schematics.json', import.meta.url))
+  const data = await fetch(new URL('/data/schematics.json', context.request.url))
     .then(res => res.json());
 
   const url = new URL(context.request.url);
@@ -24,6 +24,7 @@ export async function onRequest(context) {
       s.categories?.includes(category)
     );
   }
+
   const totalItems = filtered.length;
   const totalPages = Math.ceil(totalItems / pageSize);
 
@@ -39,7 +40,8 @@ export async function onRequest(context) {
   }), {
     headers: {
       "Content-Type": "application/json",
-      "Cache-Control": "max-age=300"
+      "Cache-Control": "max-age=300",
+      "Access-Control-Allow-Origin": "*"
     }
   });
 }
