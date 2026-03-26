@@ -1,5 +1,17 @@
 [
-  { "id": "farms", "label": "Farms" },
-  { "id": "builds", "label": "Builds" },
-  { "id": "redstone", "label": "Redstone" }
+  {
+    "id": "farms",
+    "name": "Farms",
+    "icon": "wheat"
+  },
+  {
+    "id": "builds",
+    "name": "Builds",
+    "icon": "bricks"
+  },
+  {
+    "id": "redstone",
+    "name": "Redstone",
+    "icon": "redstone"
+  }
 ]
