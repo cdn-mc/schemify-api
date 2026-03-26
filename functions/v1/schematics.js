@@ -1,46 +1,60 @@
 export async function onRequest(context) {
-  const data = await fetch(new URL('/data/schematics.json', context.request.url))
-    .then(res => res.json());
+  try {
+    const dataUrl = new URL('/data/schematics.json', context.request.url);
+    const response = await fetch(dataUrl);
+    const data = await response.json();
 
-  const url = new URL(context.request.url);
+    const url = new URL(context.request.url);
 
-  const page = parseInt(url.searchParams.get("page") || "1");
-  const pageSize = parseInt(url.searchParams.get("page_size") || "10");
-  const search = url.searchParams.get("search")?.toLowerCase() || "";
-  const category = url.searchParams.get("category");
+    const page = parseInt(url.searchParams.get("page") || "1");
+    const pageSize = parseInt(url.searchParams.get("page_size") || "10");
+    const search = url.searchParams.get("search")?.toLowerCase() || "";
+    const category = url.searchParams.get("category");
 
-  let filtered = data;
-  if (search) {
-    filtered = filtered.filter(s =>
-      s.name.toLowerCase().includes(search) ||
-      s.author.toLowerCase().includes(search) ||
-      s.tags?.some(t => t.toLowerCase().includes(search))
-    );
-  }
+    let filtered = data;
 
-  if (category) {
-    filtered = filtered.filter(s =>
-      s.categories?.includes(category)
-    );
-  }
-
-  const totalItems = filtered.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
-
-  const start = (page - 1) * pageSize;
-  const items = filtered.slice(start, start + pageSize);
-
-  return new Response(JSON.stringify({
-    page,
-    page_size: pageSize,
-    total_pages: totalPages,
-    total_items: totalItems,
-    items
-  }), {
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "max-age=300",
-      "Access-Control-Allow-Origin": "*"
+    if (search) {
+      filtered = filtered.filter(s =>
+        s.name.toLowerCase().includes(search) ||
+        s.author.toLowerCase().includes(search) ||
+        s.tags?.some(t => t.toLowerCase().includes(search))
+      );
     }
-  });
+
+    if (category) {
+      filtered = filtered.filter(s =>
+        s.categories?.includes(category)
+      );
+    }
+
+    const totalItems = filtered.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    const start = (page - 1) * pageSize;
+    const items = filtered.slice(start, start + pageSize);
+
+    return new Response(JSON.stringify({
+      page,
+      page_size: pageSize,
+      total_pages: totalPages,
+      total_items: totalItems,
+      items
+    }), {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+
+  } catch (error) {
+
+    return new Response(JSON.stringify({
+      error: "API error",
+      message: error.message
+    }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
+
+  }
 }
